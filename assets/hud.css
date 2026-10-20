@@ -1,0 +1,99 @@
+/* Stage 2 only. Stage 1 index.html and its successful transparent CSS are preserved. */
+:root {
+  --hud-width: 1120px;
+  --text-scale: 1;
+  --layout-scale: 1;
+  --panel-alpha: 0;
+  --metric-alpha: 0;
+  --line: rgba(214, 242, 255, .35);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #f4fbff;
+  background: transparent !important;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0 !important; padding: 0 !important; min-height: 100%; background: transparent !important; background-image: none !important; }
+/* Explicit opt-in comparison modes. The default always remains transparent. */
+html[data-background="green"], html[data-background="green"] body { background: #00ff00 !important; }
+html[data-background="dark"], html[data-background="dark"] body { background: #07111b !important; }
+[hidden] { display: none !important; }
+.shell { width: 100%; max-width: var(--hud-width); margin-inline: auto; padding: clamp(12px, 3vw, 36px); }
+.topbar, .identity, .meta, .section-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.topbar { margin-bottom: 24px; }
+.topbar p { margin: 6px 0; }
+.eyebrow { color: #a9d7e7; font-weight: 700; font-size: .72em; letter-spacing: .16em; }
+.tag { padding: 8px 12px; border: 1px solid var(--line); border-radius: 30px; font-size: .75rem; }
+.hud {
+  font-size: calc(16px * var(--text-scale));
+  container-type: inline-size;
+  background: rgba(5, 18, 29, var(--panel-alpha)) !important;
+  background-image: none !important;
+  border: none !important;
+  outline: none;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 28px;
+  padding: calc(clamp(16px, 3vw, 42px) * var(--layout-scale));
+  transform: none;
+}
+.hud, .hud * { opacity: 1; }
+.identity { border-bottom: 1px solid var(--line); padding-bottom: calc(24px * var(--layout-scale)); }
+.patient { min-width: 0; max-width: 100%; }
+h1 { font-size: 2.4em; letter-spacing: -.05em; margin: 4px 0; line-height: 1.25; overflow-wrap: anywhere; }
+.status { border: 1px solid currentColor; border-radius: 30px; padding: 10px 16px; color: #8ff0cb; font-weight: 700; }
+.status.attention { color: #ffca8a; }
+.status.observing { color: #a9d7e7; }
+.metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(24px * var(--layout-scale)); padding-block: calc(30px * var(--layout-scale)); }
+.metric { min-width: 0; background: rgba(5, 18, 29, var(--metric-alpha)); border-radius: 12px; padding: 12px; }
+.metric + .metric { border-left: 1px solid var(--line); }
+.label { font-size: .85em; letter-spacing: .08em; }
+.value { font-size: 4.3em; font-size: clamp(2.8em, calc(15cqi * var(--text-scale)), 6.2em); font-weight: 650; line-height: 1.2; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.unit { color: #c4dce5; font-size: .9em; }
+.trace { width: 100%; height: 46px; color: #8ff0cb; display: block; }
+.trace polyline { fill: none; stroke: currentColor; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.patient-note { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+.meta { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); font-size: .78em; color: #c4dce5; }
+.shadow .hud, .shadow .topbar { text-shadow: 0 2px 4px #000, 0 0 12px #000; }
+.modebar { display: flex; justify-content: flex-end; margin-block: 18px; }
+/* No page-wide dark plate. Only the editor has a local readable surface. */
+.settings { padding: clamp(16px, 3vw, 28px); border: 1px solid var(--line); border-radius: 20px; background: rgba(5, 18, 29, .94); line-height: 1.55; }
+h2 { font-size: 1.4rem; margin: 6px 0; }
+fieldset { margin: 24px 0 0; padding: 20px 0 0; border: 0; border-top: 1px solid var(--line); min-width: 0; }
+legend { padding-right: 12px; font-weight: 700; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 22px; }
+label, .test-item { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.full { grid-column: 1 / -1; }
+.check { flex-direction: row; align-items: center; min-height: 52px; cursor: pointer; padding: 8px; }
+button, input, select, textarea { font: inherit; }
+button, select, input:not([type="checkbox"]), textarea { width: 100%; min-width: 0; min-height: 52px; border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; color: #f4fbff; background: #142432; }
+button { width: auto; cursor: pointer; touch-action: manipulation; }
+button:hover { background: #294253; }
+button:active { border-color: #6fe9ff; }
+button[aria-pressed="true"] { color: #9af4ff; border-color: #6fe9ff; }
+input[type="range"] { padding: 0; cursor: pointer; accent-color: #6fe9ff; }
+input[type="checkbox"] { width: 26px; height: 26px; flex-shrink: 0; accent-color: #6fe9ff; }
+textarea { resize: vertical; }
+select { color-scheme: dark; }
+:is(button, input, select, textarea, a):focus-visible { outline: 3px solid #6fe9ff; outline-offset: 4px; }
+[aria-invalid="true"] { border-color: #ffca8a !important; }
+.error { color: #ffca8a; min-height: 1.4em; }
+.actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+.feedback, .hint, small { color: #c4dce5; font-size: .85rem; overflow-wrap: anywhere; }
+.feedback { border-left: 3px solid #6fe9ff; padding-left: 12px; }
+output { color: #9af4ff; overflow-wrap: anywhere; }
+.multiline { white-space: pre-wrap; }
+a { color: #9af4ff; padding-block: 14px; display: inline-block; }
+.notice { background: rgba(5, 18, 29, .94); padding: 14px; border-radius: 10px; }
+footer { font-size: .7rem; color: #b1cbd5; margin-top: 24px; }
+@container (max-width: 480px) {
+  .metrics { grid-template-columns: 1fr; gap: 12px; padding-block: 16px; }
+  .metric + .metric { border-left: none; border-top: 1px solid var(--line); }
+  .value { font-size: clamp(2.8em, calc(21cqi * var(--text-scale)), 5em); }
+  h1 { font-size: 1.9em; }
+}
+@media (max-width: 540px) {
+  .metrics { grid-template-columns: 1fr; gap: 12px; }
+  .metric + .metric { border-left: none; border-top: 1px solid var(--line); }
+  .actions { flex-direction: column; }
+  .actions button { width: 100%; }
+}

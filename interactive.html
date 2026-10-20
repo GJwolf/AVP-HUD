@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AVP-HUD-Test · Stage 2 互動測試</title>
+  <link rel="stylesheet" href="assets/hud.css">
+  <script defer src="assets/state.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body data-mode="hud" class="shadow">
+<main class="shell">
+  <header class="topbar"><div><div class="eyebrow">SPATIAL FIELD MONITOR</div><p>透明 HUD · Stage 2</p></div><span class="tag">PoC / 全部為模擬資料</span></header>
+  <section class="hud" aria-label="傷患測試資訊">
+    <div class="identity"><div class="patient"><div class="eyebrow">PATIENT IDENTIFIER</div><h1>傷患 <span id="patientDisplay">A01</span></h1></div><div id="statusDisplay" class="status">● 模擬穩定</div></div>
+    <div class="metrics"><div class="metric"><div class="label">HR · 心率</div><div class="value" id="hrDisplay">78</div><div class="unit">bpm</div></div><div class="metric"><div class="label">SpO₂ · 血氧</div><div class="value" id="spo2Display">98</div><div class="unit">%</div></div></div>
+    <svg class="trace" viewBox="0 0 900 46" preserveAspectRatio="none" role="img" aria-label="固定心電圖示意，非生理訊號"><polyline points="0,28 90,28 105,24 120,28 170,28 180,36 192,4 204,43 216,28 300,28 315,24 330,28 390,28 400,36 412,4 424,43 436,28 520,28 535,24 550,28 610,28 620,36 632,4 644,43 656,28 740,28 755,24 770,28 830,28 840,36 852,4 864,43 876,28 900,28"/></svg>
+    <p class="patient-note" id="notesDisplay" hidden></p>
+    <div class="meta"><span id="simulationDisplay">模擬已暫停 · 可在設定中啟動</span><span>更新時間 <time id="updated">—</time></span></div>
+  </section>
+  <div class="modebar"><button id="modeToggle" type="button" aria-controls="settings" aria-expanded="false">設定／輸入</button></div>
+  <section id="settings" class="settings" aria-labelledby="settingsTitle" hidden>
+    <div class="section-heading"><div><div class="eyebrow">CONFIGURATION</div><h2 id="settingsTitle" tabindex="-1">設定／輸入模式</h2></div><a href="index.html">原版透明 HUD</a></div>
+    <p class="hint">凝視控制項並捏合以操作；文字欄位可測試系統鍵盤。有效輸入立即同步到上方。手動編輯傷患資料會暫停模擬。</p>
+    <fieldset><legend>傷患測試資料</legend><div class="form-grid">
+      <label for="patientId">傷患編號<input id="patientId" type="text" maxlength="32" required autocomplete="off" aria-describedby="patientIdError"><small class="error" id="patientIdError"></small></label>
+      <label for="hr">心率 BPM<input id="hr" type="number" min="0" max="300" step="1" required inputmode="numeric" aria-describedby="hrError"><small class="error" id="hrError"></small></label>
+      <label for="spo2">血氧 SpO₂（%）<input id="spo2" type="number" min="0" max="100" step="1" required inputmode="numeric" aria-describedby="spo2Error"><small class="error" id="spo2Error"></small></label>
+      <label for="patientStatus">傷患狀態<select id="patientStatus"><option value="stable">模擬穩定</option><option value="attention">模擬需關注</option><option value="observing">模擬觀察中</option></select></label>
+      <label class="full" for="notes">傷患備註<textarea id="notes" rows="3" maxlength="500" placeholder="僅輸入虛構測試資料"></textarea><small>最多 500 字；內容會在本機儲存。</small></label>
+    </div><p class="feedback" id="patientFeedback" role="status">尚未編輯。驗證範圍僅供輸入測試，不代表醫療判斷。</p></fieldset>
+    <fieldset><legend>顯示與模擬</legend><div class="form-grid">
+      <label for="hudWidth">HUD 內部最大寬度 <output id="hudWidthOut" for="hudWidth"></output><input id="hudWidth" type="range" min="320" max="1440" step="10"></label>
+      <label for="textScale">文字比例 <output id="textScaleOut" for="textScale"></output><input id="textScale" type="range" min="85" max="140" step="5"></label>
+      <label for="layoutScale">版面比例（CSS 尺寸，非 transform）<output id="layoutScaleOut" for="layoutScale"></output><input id="layoutScale" type="range" min="80" max="120" step="5"></label>
+      <label for="panelAlpha">HUD 底色不透明度 <output id="panelAlphaOut" for="panelAlpha"></output><input id="panelAlpha" type="range" min="0" max="100" step="5"><small>0% 為全透明；只影響底色，不影響文字。</small></label>
+      <label for="metricAlpha">數值區底色不透明度 <output id="metricAlphaOut" for="metricAlpha"></output><input id="metricAlpha" type="range" min="0" max="100" step="5"></label>
+      <label for="background">頁面背景比較<select id="background"><option value="transparent">透明（預設）</option><option value="green">綠幕 #00FF00</option><option value="dark">暗底 #07111B</option></select></label>
+      <label class="check"><input id="shadow" type="checkbox">文字陰影增強可讀性</label>
+      <label for="scenario">假資料情境<select id="scenario"><option value="stable">穩定示範</option><option value="attention">需關注示範</option></select></label>
+      <label for="interval">模擬更新頻率<select id="interval"><option value="2000">每 2 秒</option><option value="5000">每 5 秒</option></select></label>
+    </div><div class="actions"><button id="simulationToggle" type="button" aria-pressed="false">啟動假資料更新</button></div><p class="hint">啟動後會覆蓋 HR、SpO₂ 與狀態。心電圖是固定示意線，與數字無同步關係。</p></fieldset>
+    <fieldset><legend>獨立互動測試（不更改傷患資料、不儲存）</legend><div class="form-grid">
+      <div class="test-item"><button id="testButton" type="button">Button · 點擊測試</button><output id="testButtonOut" aria-live="polite">已點擊 0 次</output></div>
+      <label for="testText">Input · 文字<input id="testText" type="text" maxlength="80" autocomplete="off"><output id="testTextOut">尚未輸入</output></label>
+      <label for="testNumber">Number · 整數 0–100<input id="testNumber" type="number" min="0" max="100" step="1" inputmode="numeric"><output id="testNumberOut">尚未輸入</output></label>
+      <label for="testSelect">Select · 選擇<select id="testSelect"><option value="選項 A">選項 A</option><option value="選項 B">選項 B</option><option value="選項 C">選項 C</option></select><output id="testSelectOut">目前：選項 A</output></label>
+      <div class="test-item"><label class="check"><input id="testCheck" type="checkbox">Checkbox · 勾選</label><output id="testCheckOut">未勾選</output></div>
+      <label for="testRange">Range Slider · 滑桿<input id="testRange" type="range" min="0" max="100" value="50"><output id="testRangeOut">目前：50</output></label>
+      <label class="full" for="testTextarea">Textarea · 多行文字<textarea id="testTextarea" rows="3" maxlength="300"></textarea><output id="testTextareaOut" class="multiline">尚未輸入</output></label>
+    </div><p class="feedback" id="modeFeedback">模式切換：尚未操作</p></fieldset>
+    <fieldset><legend>重置與儲存</legend><label class="check"><input id="clearPatient" type="checkbox">重置 HUD 時一併清除傷患測試資料（還原 A01 範例）</label><div class="actions"><button id="resetHud" type="button">重置 HUD</button><button id="restoreDefaults" type="button">恢復所有預設值（含傷患資料）</button></div>
+      <p id="storageFeedback" class="feedback" role="status"></p><p class="hint">重置只影響網頁內部。localStorage 無法恢復 Translucent 的 Transparent Style、系統縮放、實際空間視窗大小或位置。若儲存被停用，頁面仍可操作，但重新整理將無法保留設定。</p>
+    </fieldset>
+    <div class="actions"><button id="returnHud" type="button">完成輸入，返回 HUD</button></div>
+    <p class="hint">本階段不連接後端、Unity 或感測器。資料僅保存在此瀏覽器的此網站來源；請勿輸入真實傷患資料。</p>
+  </section>
+  <p id="notice" class="notice" role="status" hidden></p>
+  <footer>DEMO ONLY · 非醫療系統 · 不供臨床判斷</footer>
+  <noscript>互動與儲存需要啟用 JavaScript。原版 HUD：<a href="index.html">開啟</a></noscript>
+</main>
+</body>
+</html>

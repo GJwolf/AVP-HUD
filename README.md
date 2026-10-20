@@ -1,4 +1,14 @@
-# Apple Vision Pro 透明 HUD PoC
+# AVP-HUD-Test · Stage 2
+
+**目前交付版本請先閱讀 [Stage 2 操作、發布與實機驗收說明](STAGE2.md) 及 [驗證記錄](TEST-REPORT.md)。**
+
+原版 `index.html` 保持原樣；同一專案新增 `interactive.html`，沿用原本的醫療視覺風格。Stage 2 的本機設定會自動保存；下方為 Stage 1 留存說明，不適用於 Stage 2 的儲存與透明度設定。部署時須一起上傳 `interactive.html` 與 `assets/`，維持既有 GitHub Pages 設定。
+
+---
+
+# Stage 1 留存說明
+
+目前已套用 AVP Translucent 強制透明 CSS：頁面背景及 .hud 容器固定透明，因此下述綠幕／暗底選單與面板底色不透明度暫時不會改變外觀。設定面板、內部分隔線及文字陰影仍保留；可隱藏設定面板進行 HUD 測試。
 
 純 HTML / CSS / JavaScript，無外部依賴、無建置步驟。全部程式在 `index.html`，可直接開啟，也可放在 GitHub Pages。內容為繁體中文。
 
